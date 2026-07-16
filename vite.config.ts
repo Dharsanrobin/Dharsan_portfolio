@@ -5,9 +5,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/Dharsan_portfolio/",
   plugins: [
     react(),
     tailwindcss(),
-    tsconfigPaths()
+    tsconfigPaths(),
   ],
 });
