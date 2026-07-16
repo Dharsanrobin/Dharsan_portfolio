@@ -46,40 +46,40 @@
 :root {
   --radius: 0.5rem;
 
-  /* Stardust Editorial — deep charcoal, warm gold, soft beige */
-  --background: #090704;
-  --secondary-bg: #120f0a;
-  --surface: rgba(255, 243, 227, 0.05);
-  --foreground: #f4ecde;
-  --muted-foreground: #b7aa94;
+  /* Luxury Palette — Deep Black, Royal Gold, Earth Olive, Ivory White */
+  --background: #000000;
+  --secondary-bg: #0d0d00;
+  --surface: rgba(249, 248, 238, 0.05);
+  --foreground: #F9F8EE;
+  --muted-foreground: #b0aa8a;
 
   /* accents kept under same names so existing markup adapts */
-  --gold: #d4b36a;
-  --bronze: #b59361;
-  --olive: #7d6f54;
+  --gold: #C89432;
+  --bronze: #a07828;
+  --olive: #4D4A24;
 
-  --card: rgba(255, 248, 229, 0.05);
+  --card: rgba(77, 74, 36, 0.12);
   --card-foreground: var(--foreground);
-  --popover: rgba(17, 14, 11, 0.9);
+  --popover: rgba(0, 0, 0, 0.92);
   --popover-foreground: var(--foreground);
   --primary: var(--foreground);
-  --primary-foreground: #090704;
+  --primary-foreground: #000000;
   --secondary: var(--secondary-bg);
   --secondary-foreground: var(--foreground);
-  --muted: rgba(223, 206, 177, 0.12);
+  --muted: rgba(200, 148, 50, 0.10);
   --accent: var(--gold);
   --accent-foreground: var(--background);
-  --destructive: #a86d4e;
-  --destructive-foreground: #f6ead6;
-  --border: rgba(242, 225, 193, 0.12);
-  --input: rgba(255, 248, 229, 0.08);
-  --ring: rgba(255, 243, 227, 0.25);
+  --destructive: #8b3a1a;
+  --destructive-foreground: #F9F8EE;
+  --border: rgba(200, 148, 50, 0.18);
+  --input: rgba(249, 248, 238, 0.07);
+  --ring: rgba(200, 148, 50, 0.30);
 
-  --shadow-soft: 0 24px 70px -28px rgba(0, 0, 0, 0.55), 0 8px 30px -16px rgba(0, 0, 0, 0.45);
-  --shadow-elegant: 0 70px 130px -50px rgba(0, 0, 0, 0.75);
-  --gradient-warm: linear-gradient(135deg, #120f0a 0%, #21180f 48%, #4f3f2b 100%);
-  --gradient-chrome: linear-gradient(135deg, #f4e9d1 0%, #cfb788 45%, #8f7a5c 100%);
-  --grain-opacity: 0.08;
+  --shadow-soft: 0 24px 70px -28px rgba(0, 0, 0, 0.75), 0 8px 30px -16px rgba(0, 0, 0, 0.60);
+  --shadow-elegant: 0 70px 130px -50px rgba(0, 0, 0, 0.90);
+  --gradient-warm: linear-gradient(135deg, #000000 0%, #1a1500 48%, #4D4A24 100%);
+  --gradient-chrome: linear-gradient(135deg, #F9F8EE 0%, #C89432 45%, #4D4A24 100%);
+  --grain-opacity: 0.06;
 }
 
 @layer base {
@@ -93,7 +93,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  ::selection { background: rgba(212, 179, 106, 0.25); color: #090704; }
+  ::selection { background: rgba(200, 148, 50, 0.30); color: #000000; }
   .group.block.rounded-3xl,
   .group.relative.overflow-hidden.rounded-3xl,
   .group.relative.overflow-hidden {
@@ -118,7 +118,7 @@
 
 /* Chrome / mercury text — a subtle metallic gradient for accent italic words */
 @utility text-chrome {
-  background: linear-gradient(135deg, #f4f4f5 0%, #a1a1aa 45%, #3f3f46 100%);
+  background: linear-gradient(135deg, #F9F8EE 0%, #C89432 45%, #4D4A24 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -189,7 +189,7 @@
 .animate-grid-drift { animation: grid-drift 22s linear infinite; }
 
 .shimmer-text {
-  background: linear-gradient(90deg, #fafafa 0%, #71717a 50%, #fafafa 100%);
+  background: linear-gradient(90deg, #F9F8EE 0%, #C89432 40%, #4D4A24 65%, #C89432 80%, #F9F8EE 100%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -202,8 +202,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+    linear-gradient(to right, rgba(200,148,50,0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(200,148,50,0.12) 1px, transparent 1px);
   background-size: 80px 80px;
   transform: perspective(1200px) rotateX(65deg) translateY(-120px) scale(1.6);
   transform-origin: 50% 100%;

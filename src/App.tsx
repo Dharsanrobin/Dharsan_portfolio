@@ -7,6 +7,7 @@ import projectNutrade from "@/assets/martoz.jpeg";
 import projectAuction from "@/assets/project-auction.jpg";
 import projectBakebuddy from "@/assets/project-bakebuddy.jpg";
 import projectNucamp from "@/assets/project-nucamp.jpeg";
+import resumePdf from "@/assets/Dharsan.R-Resume.pdf";
 
 /* ---------------- Data ---------------- */
 
@@ -206,44 +207,6 @@ function useLenis() {
 
 /* ---------------- Building blocks ---------------- */
 
-function Cursor() {
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 400, damping: 40, mass: 0.4 });
-  const sy = useSpring(y, { stiffness: 400, damping: 40, mass: 0.4 });
-  const [hover, setHover] = useState(false);
-
-  useEffect(() => {
-    const move = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      const t = e.target as HTMLElement | null;
-      setHover(!!t?.closest("a,button,[data-magnetic]"));
-    };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
-  }, [x, y]);
-
-  return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[100] hidden md:block"
-      style={{ x: sx, y: sy }}
-    >
-      <motion.div
-        className="rounded-full mix-blend-multiply"
-        animate={{
-          width: hover ? 56 : 14,
-          height: hover ? 56 : 14,
-          x: hover ? -28 : -7,
-          y: hover ? -28 : -7,
-          backgroundColor: hover ? "rgba(184,147,95,0.35)" : "rgba(36,33,29,0.85)",
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      />
-    </motion.div>
-  );
-}
 
 function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
@@ -381,12 +344,22 @@ function Nav() {
             );
           })}
         </nav>
-        <a
-          href="#contact"
-          className="rounded-full bg-[color:var(--foreground)] px-6 py-3 text-sm uppercase tracking-widest text-[color:var(--background)] transition-colors hover:bg-[color:var(--bronze)]"
-        >
-          Get in touch
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href={resumePdf}
+            download="Dharsan.R-Resume.pdf"
+            className="hidden md:inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)] px-5 py-3 text-sm uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--background)]  "
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Resume
+          </a>
+          <a
+            href="#contact"
+            className="rounded-full bg-[color:var(--foreground)] px-6 py-3 text-sm uppercase tracking-widest text-[color:var(--background)] transition-colors hover:bg-[color:var(--bronze)]"
+          >
+            Get in touch
+          </a>
+        </div>
       </div>
     </motion.header>
   );
@@ -468,10 +441,10 @@ function Hero() {
             <div className="relative mt-8">
               <h1 className="relative z-10 font-display text-[clamp(3.2rem,8.6vw,7.5rem)] font-black leading-[0.9] tracking-tighter text-[color:var(--foreground)]">
                 RE
-                <span className="text-chrome font-serif-editorial italic">ACT</span>
+                <span className="text-chrome font-serif-editorial italic">ACT &</span>
                 <br />
                 <span className="relative inline-block">
-                  DEVELOPER
+                  DEVELOPER 
                 </span>
               </h1>
               {/* Ghost layer for depth */}
@@ -508,6 +481,14 @@ function Hero() {
               <MagneticButton href="#contact" variant="ghost">
                 Contact
               </MagneticButton>
+              <a
+                href={resumePdf}
+                download="Dharsan.R-Resume.pdf"
+                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)] px-7 py-4 text-sm font-medium text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--background)]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Resume
+              </a>
             </div>
           </Reveal>
 
@@ -1249,7 +1230,7 @@ export default function App() {
   return (
     <div className="relative overflow-x-hidden">
       <ScrollProgress />
-      <Cursor />
+
       <Nav />
       <main>
         <Hero />
