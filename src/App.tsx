@@ -4,8 +4,8 @@ import Lenis from "lenis";
 
 import portrait from "@/assets/portrait.jpeg";
 import projectNutrade from "@/assets/martoz.jpeg";
-import projectAuction from "@/assets/project-auction.jpg";
-import projectBakebuddy from "@/assets/project-bakebuddy.jpg";
+import projectAuction from "@/assets/project-auction.png";
+import projectBakebuddy from "@/assets/project-bakebuddy.png";
 import projectNucamp from "@/assets/project-nucamp.jpeg";
 import resumePdf from "@/assets/Dharsan.R-Resume.pdf";
 
@@ -280,8 +280,49 @@ function MagneticButton({
 
 /* ---------------- Sections ---------------- */
 
+function IntroOverlay({ onComplete }: { onComplete: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, filter: "blur(12px)" }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black text-[color:var(--foreground)]"
+    >
+      <div className="overflow-hidden">
+        <motion.h2
+          initial={{ y: 80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="font-display text-5xl md:text-7xl tracking-widest uppercase font-light"
+        >
+          Dharsan<span className="text-[color:var(--gold)]">.</span>R
+        </motion.h2>
+      </div>
+      <div className="overflow-hidden mt-3">
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 0.5 }}
+          transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="font-mono text-[10px] tracking-[0.4em] uppercase text-[color:var(--muted-foreground)]"
+        >
+          React Developer
+        </motion.div>
+      </div>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 1.6, ease: "easeInOut" }}
+        onAnimationComplete={onComplete}
+        className="absolute bottom-16 left-16 right-16 h-[1px] bg-[color:var(--gold)]/20 origin-left"
+      />
+    </motion.div>
+  );
+}
+
 function Nav() {
   const [activeSection, setActiveSection] = useState("top");
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const sectionIds = NAV.map((item) => item.href.replace("#", ""));
@@ -298,6 +339,7 @@ function Nav() {
       });
 
       setActiveSection(current);
+      setScrolled(window.scrollY > 50);
     };
 
     updateActiveSection();
@@ -309,57 +351,178 @@ function Nav() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  const menuItems = [
+    { label: "Home", href: "#top" },
+    ...NAV,
+  ];
+
   return (
     <motion.header
       initial={{ y: -30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.9, ease: [0.22, 0.9, 0.28, 1] }}
-      className="fixed inset-x-0 top-0 z-50 flex justify-center "
+      className={`fixed inset-x-0 top-0 z-50 flex justify-center transition-all duration-300 ${
+        scrolled ? "bg-black/85 backdrop-blur-md border-b border-[color:var(--gold)]/10" : "bg-transparent"
+      }`}
     >
-      <div
-        className={
-          "flex w-full items-center justify-between px-6 py-4 transition-all bg-[color:var(--secondary-bg)]/95"
-        }
-      >
-        <a href="#top" className="flex items-center gap-3 font-display text-3xl font-medium tracking-tight px-5 ">
-          Dharsan.R
+      <div className="flex w-full max-w-[1540px] items-center justify-between px-8 py-5 transition-all">
+        <a href="#top" className="flex items-center gap-2 font-display text-3xl font-medium tracking-tight">
+          Dharsan<span className="text-[color:var(--gold)]">.</span>R
         </a>
-        <nav className="hidden items-center gap-10 md:flex">
-          {NAV.map((n) => {
-            const id = n.href.replace("#", "");
-            const isActive = activeSection === id;
-            return (
-              <a
-                key={n.href}
-                href={n.href}
-                className={
-                  "relative pb-1 text-base transition-colors after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:rounded-full after:bg-[color:var(--foreground)] after:transition-all " +
-                  (isActive
-                    ? "text-[color:var(--foreground)] after:w-full"
-                    : "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)] hover:after:w-full")
-                }
+        
+        {/* Desktop Nav */}
+        <><nav className="hidden items-center gap-10 md:flex">
+  {NAV.map((n) => {
+    const id = n.href.replace("#", "");
+    const isActive = activeSection === id;
+    return (
+      <a
+        key={n.href}
+        href={n.href}
+        className={"relative pb-1 text-[11px] tracking-[0.2em] uppercase font-semibold transition-colors after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:rounded-full after:bg-[color:var(--gold)] after:transition-all " +
+          (isActive
+            ? "text-[color:var(--foreground)] after:w-full"
+            : "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)] hover:after:w-full")}
+      >
+        {n.label}
+      </a>
+    );
+  })}
+</nav><div className="hidden items-center gap-4 md:flex">
+    <a
+      href={resumePdf}
+      download="Dharsan.R-Resume.pdf"
+      className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/30 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+      Resume
+    </a>
+    <a
+      href="#contact"
+      className="rounded-full bg-[color:var(--foreground)] px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-black transition-all hover:bg-[color:var(--gold)]"
+    >
+      Get in touch
+    </a>
+  </div></>
+
+        {/* Mobile Hamburger Button */}
+        <button
+          onClick={() => setIsOpen(!open)}
+          aria-label="Toggle Menu"
+          className="flex h-10 w-10 flex-col items-end justify-center gap-1.5 md:hidden z-50 cursor-pointer relative"
+        >
+          <motion.span
+            animate={open() ? { rotate: 45, y: 6, width: "24px" } : { rotate: 0, y: 0, width: "24px" }}
+            transition={{ duration: 0.3 }}
+            className="h-[2px] bg-[color:var(--foreground)] rounded-full"
+          />
+          <motion.span
+            animate={open() ? { opacity: 0, width: "0px" } : { opacity: 1, width: "18px" }}
+            transition={{ duration: 0.2 }}
+            className="h-[2px] bg-[color:var(--foreground)] rounded-full"
+          />
+          <motion.span
+            animate={open() ? { rotate: -45, y: -6, width: "24px" } : { rotate: 0, y: 0, width: "12px" }}
+            transition={{ duration: 0.3 }}
+            className="h-[2px] bg-[color:var(--foreground)] rounded-full"
+          />
+        </button>
+
+        {/* Mobile Sidebar */}
+        <AnimatePresence>
+          {open() && (
+            <>
+              {/* Dark Blur Overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                onClick={() => setIsOpen(false)}
+                className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md md:hidden"
+              />
+
+              {/* Sidebar Menu */}
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 28, stiffness: 220 }}
+                className="fixed right-0 top-0 bottom-0 z-45 flex h-full w-[75%] flex-col justify-between bg-black/95 border-l border-[color:var(--gold)]/10 px-8 py-24 backdrop-blur-lg md:hidden"
               >
-                {n.label}
-              </a>
-            );
-          })}
-        </nav>
-        <div className="flex items-center gap-3">
-          <a
-            href={resumePdf}
-            download="Dharsan.R-Resume.pdf"
-            className="hidden md:inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)] px-5 py-3 text-sm uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--background)]  "
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Resume
-          </a>
-          <a
-            href="#contact"
-            className="rounded-full bg-[color:var(--foreground)] px-6 py-3 text-sm uppercase tracking-widest text-[color:var(--background)] transition-colors hover:bg-[color:var(--bronze)]"
-          >
-            Get in touch
-          </a>
-        </div>
+                <div className="flex flex-col gap-8 mt-8">
+                  <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--gold)] border-b border-[color:var(--gold)]/15 pb-4">
+                    Navigation
+                  </div>
+                  <nav className="flex flex-col gap-6">
+                    {menuItems.map((n) => (
+                      <a
+                        key={n.label}
+                        href={n.href}
+                        onClick={() => setIsOpen(false)}
+                        className="font-display text-4xl font-light tracking-wide text-[color:var(--foreground)] transition-colors hover:text-[color:var(--gold)]"
+                      >
+                        {n.label}
+                      </a>
+                    ))}
+                    <a
+                      href={resumePdf}
+                      download="Dharsan.R-Resume.pdf"
+                      onClick={() => setIsOpen(false)}
+                      className="font-display text-4xl font-light tracking-wide text-[color:var(--gold)] flex items-center gap-3"
+                    >
+                      Resume
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </a>
+                  </nav>
+                </div>
+
+                <div className="flex flex-col gap-6">
+                  <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
+                    Contact Details
+                  </div>
+                  <div className="flex flex-col gap-3 font-sans text-sm">
+                    <a href="mailto:dharsan2710@gmail.com" className="text-[color:var(--muted-foreground)] hover:text-white transition-colors">
+                      dharsan2710@gmail.com
+                    </a>
+                    <a href="tel:+918489260162" className="text-[color:var(--muted-foreground)] hover:text-white transition-colors">
+                      +91 84892 60162
+                    </a>
+                    <div className="flex gap-4 mt-2">
+                      <a
+                        href="https://github.com/Dharsanrobin"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[color:var(--gold)] hover:text-white transition-colors"
+                      >
+                        GitHub
+                      </a>
+                      <a
+                        href="https://www.linkedin.com/in/dharsan-r-999930280/"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[color:var(--gold)] hover:text-white transition-colors"
+                      >
+                        LinkedIn
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </motion.header>
   );
@@ -395,21 +558,21 @@ function Hero() {
   };
 
   return (
-    <section id="top" ref={ref} className="relative min-h-[100svh] overflow-hidden pt-32">
+    <section id="top" ref={ref} className="relative min-h-[100svh] overflow-hidden pt-36">
       {/* 3D grid floor */}
       <div aria-hidden className="grid-floor animate-grid-drift" />
 
-      {/* ambient chrome glows */}
+      {/* ambient gold glows */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-[-15%] h-[560px] w-[560px] rounded-full opacity-40 blur-3xl animate-float-slow"
-        style={{ background: "radial-gradient(circle, rgba(180,180,190,0.35), transparent 60%)" }}
+        className="pointer-events-none absolute -top-40 left-[-15%] h-[560px] w-[560px] rounded-full opacity-35 blur-3xl animate-float-slow"
+        style={{ background: "radial-gradient(circle, rgba(200,148,50,0.18), transparent 65%)" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-25%] right-[-10%] h-[680px] w-[680px] rounded-full opacity-40 blur-3xl animate-float-slow"
+        className="pointer-events-none absolute bottom-[-25%] right-[-10%] h-[680px] w-[680px] rounded-full opacity-35 blur-3xl animate-float-slow"
         style={{
-          background: "radial-gradient(circle, rgba(90,90,100,0.45), transparent 60%)",
+          background: "radial-gradient(circle, rgba(77,74,36,0.25), transparent 65%)",
           animationDelay: "-6s",
         }}
       />
@@ -418,20 +581,20 @@ function Hero() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(60% 40% at 50% 0%, rgba(255,255,255,0.06), transparent 70%), linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.9) 100%)",
+            "radial-gradient(60% 40% at 50% 0%, rgba(200,148,50,0.06), transparent 70%), linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.95) 100%)",
         }}
       />
 
       <motion.div
         style={{ z: heroZ, rotateX: heroRotX }}
-        className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 pb-24 perspective-hero preserve-3d md:grid-cols-12 md:gap-16 md:pb-40"
+        className="relative mx-auto grid max-w-[1540px] grid-cols-1 gap-12 px-8 pb-24 perspective-hero preserve-3d md:grid-cols-12 md:gap-16 md:pb-40"
       >
         {/* Left copy */}
-        <motion.div style={{ opacity }} className="relative md:col-span-7 md:pt-6">
+        <motion.div style={{ opacity }} className="relative md:col-span-6 md:pt-6">
           <Reveal>
             <div className="inline-flex items-center gap-4">
               <span className="h-px w-10 bg-[color:var(--foreground)]/15" />
-              <span className="font-mono-editorial text-[10px] uppercase tracking-[0.4em] text-[color:var(--muted-foreground)]">
+              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-[color:var(--muted-foreground)]">
                 Portfolio · Dharsan R - React.js Developer
               </span>
             </div>
@@ -439,30 +602,13 @@ function Hero() {
 
           <Reveal delay={0.08}>
             <div className="relative mt-8">
-              <h1 className="relative z-10 font-display text-[clamp(3.2rem,8.6vw,7.5rem)] font-black leading-[0.9] tracking-tighter text-[color:var(--foreground)]">
+              <h1 className="relative z-10 font-display text-[clamp(3.5rem,8.6vw,7.8rem)] font-black leading-[0.88] tracking-tighter text-[color:var(--foreground)]">
                 RE
-                <span className="text-chrome font-serif-editorial italic">ACT &</span>
+                <span className="text-chrome font-serif-editorial italic">ACT</span>
                 <br />
-                <span className="relative inline-block">
+                <span className="relative inline-block mt-2">
                   DEVELOPER 
                 </span>
-              </h1>
-              {/* Ghost layer for depth */}
-              <h1
-                aria-hidden
-                className="pointer-events-none absolute left-[3px] top-[3px] z-0 font-display text-[clamp(3.2rem,8.6vw,7.5rem)] font-black leading-[0.9] tracking-tighter text-[color:var(--foreground)]/[0.08] blur-[2px]"
-              >
-                REACT
-                <br />
-                ARCHITECT
-              </h1>
-              <h1
-                aria-hidden
-                className="pointer-events-none absolute left-[8px] top-[8px] z-0 font-display text-[clamp(3.2rem,8.6vw,7.5rem)] font-black leading-[0.9] tracking-tighter text-[color:var(--foreground)]/[0.04] blur-[6px]"
-              >
-                REACT
-                <br />
-                ARCHITECT
               </h1>
             </div>
           </Reveal>
@@ -471,7 +617,7 @@ function Hero() {
             <p className="mt-10 max-w-xl text-lg leading-relaxed text-[color:var(--muted-foreground)]">
               I&apos;m <span className="text-[color:var(--foreground)]">Dharsan R</span>, a React.js developer with two years
               of production experience — crafting high-performance dashboards, reusable component systems,
-              and full-stack features backed by <span className="text-[color:var(--foreground)]">Java &amp; Spring Boot</span>.
+              and full-stack features backed by <span className="text-[color:var(--foreground)] font-semibold">Java &amp; Spring Boot</span>.
             </p>
           </Reveal>
 
@@ -484,7 +630,7 @@ function Hero() {
               <a
                 href={resumePdf}
                 download="Dharsan.R-Resume.pdf"
-                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)] px-7 py-4 text-sm font-medium text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--background)]"
+                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/30 px-7 py-4 text-sm font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Resume
@@ -501,7 +647,7 @@ function Hero() {
               ].map((s) => (
                 <div key={s.v}>
                   <dt className="font-display text-3xl text-[color:var(--foreground)]">{s.k}</dt>
-                  <dd className="mt-1 font-mono-editorial text-[10px] uppercase tracking-[0.25em] text-[color:var(--muted-foreground)]">
+                  <dd className="mt-1 font-mono text-[9px] uppercase tracking-[0.25em] text-[color:var(--muted-foreground)]">
                     {s.v}
                   </dd>
                 </div>
@@ -511,7 +657,7 @@ function Hero() {
         </motion.div>
 
         {/* 3D Portrait stack */}
-        <div className="md:col-span-5">
+        <div className="md:col-span-6 flex items-center justify-center">
           <motion.div
             style={{ y: yPortrait }}
             className="perspective-hero relative mx-auto flex h-[560px] w-full max-w-md items-center justify-center"
@@ -519,12 +665,12 @@ function Hero() {
             {/* Orbit ring — rotates on the floor plane */}
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] rounded-full border border-[color:var(--foreground)]/10 animate-orbit"
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] rounded-full border border-[color:var(--gold)]/10 animate-orbit"
               style={{ transform: "translate(-50%, -50%) rotateX(72deg)" }}
             />
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 h-[360px] w-[360px] rounded-full border border-[color:var(--foreground)]/[0.06]"
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[360px] w-[360px] rounded-full border border-[color:var(--gold)]/5"
               style={{ transform: "translate(-50%, -50%) rotateX(72deg)" }}
             />
 
@@ -539,13 +685,13 @@ function Hero() {
               {/* deep shadow layer */}
               <div
                 aria-hidden
-                className="absolute inset-0 rounded-sm bg-[color:var(--secondary-bg)]/70 blur-3xl"
+                className="absolute inset-0 rounded-sm bg-[color:var(--secondary-bg)]/75 blur-3xl"
                 style={{ transform: "translateZ(-80px)" }}
               />
 
               {/* card body */}
               <div
-                className="absolute inset-0 overflow-hidden rounded-sm border border-[color:var(--foreground)]/12 bg-[color:var(--background)] p-1 shadow-2xl"
+                className="absolute inset-0 overflow-hidden rounded-sm border border-[color:var(--gold)]/20 bg-[color:var(--background)] p-1 shadow-2xl"
                 style={{ transform: "translateZ(0px)" }}
               >
                 <div className="relative h-full w-full overflow-hidden bg-[color:var(--secondary-bg)]">
@@ -562,19 +708,19 @@ function Hero() {
                     className="absolute inset-0"
                     style={{
                       background:
-                        "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, transparent 40%, rgba(0,0,0,0.85) 100%)",
+                        "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, transparent 40%, rgba(0,0,0,0.9) 100%)",
                     }}
                   />
                   <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6">
                     <div>
-                      <div className="font-mono-editorial text-[10px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
+                      <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
                         React Developer
                       </div>
-                      <div className="mt-2 font-serif-editorial text-2xl italic text-[color:var(--foreground)]">
+                      <div className="mt-2 font-display text-2xl text-[color:var(--foreground)]">
                         Dharsan R
                       </div>
                     </div>
-                    <div className="text-right font-mono-editorial text-[10px] uppercase tracking-[0.25em] text-[color:var(--muted-foreground)]">
+                    <div className="text-right font-mono text-[9px] uppercase tracking-[0.25em] text-[color:var(--muted-foreground)]">
                       Chennai 
                     </div>
                   </div>
@@ -584,12 +730,12 @@ function Hero() {
               {/* corner frame accents (in front) */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 border-r border-t border-[color:var(--foreground)]/20"
+                className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 border-r border-t border-[color:var(--gold)]/20"
                 style={{ transform: "translateZ(60px)" }}
               />
               <div
                 aria-hidden
-                className="pointer-events-none absolute -bottom-4 -left-4 h-16 w-16 border-b border-l border-[color:var(--foreground)]/20"
+                className="pointer-events-none absolute -bottom-4 -left-4 h-16 w-16 border-b border-l border-[color:var(--gold)]/20"
                 style={{ transform: "translateZ(60px)" }}
               />
 
@@ -600,14 +746,14 @@ function Hero() {
               >
                 <div className="flex items-end justify-between">
                   <div>
-                    <div className="font-mono-editorial text-[9px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
+                    <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
                       SPECIALIZED IN
                     </div>
-                    <div className="mt-1 font-serif-editorial text-xl italic text-[color:var(--foreground)]">
+                    <div className="mt-1 font-display text-lg text-[color:var(--foreground)]">
                       React Ecosystem
                     </div>
                   </div>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--foreground)]/15">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--gold)]/20">
                     <span className="relative flex h-2 w-2">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -621,10 +767,10 @@ function Hero() {
                 className="glass absolute -left-10 top-10 hidden rounded-sm px-4 py-3 md:block"
                 style={{ transform: "translateZ(40px)" }}
               >
-                <div className="font-mono-editorial text-[9px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
+                <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
                   EXPERTISE
                 </div>
-                <div className="mt-1 font-serif-editorial text-sm italic text-[color:var(--foreground)]">
+                <div className="mt-1 font-display text-sm text-[color:var(--foreground)]">
                   React • Java • Spring Boot
                 </div>
               </div>
@@ -642,7 +788,7 @@ function Hero() {
                 (t) => (
                   <span key={`${i}-${t}`} className="flex items-center gap-14">
                     <span>{t}</span>
-                    <span className="text-[color:var(--foreground)]/35">◆</span>
+                    <span className="text-[color:var(--gold)]/50">◆</span>
                   </span>
                 ),
               ),
@@ -656,7 +802,7 @@ function Hero() {
 
 function Philosophy() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-32">
+    <section className="mx-auto max-w-[1540px] px-8 md:px-12 py-32">
       <SectionLabel chapter="00" title="Philosophy" />
 
       <div className="mt-10 grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -664,7 +810,7 @@ function Philosophy() {
           <Reveal>
             <p className="font-display text-[clamp(1.75rem,3.2vw,3rem)] leading-[1.15] text-balance">
               I build{" "}
-              <span className="font-serif-editorial text-[color:var(--bronze)]">
+              <span className="font-serif-editorial text-[color:var(--gold)] italic">
                 scalable, production-ready
               </span>{" "}
               web applications with clean architecture and intuitive user
@@ -692,8 +838,8 @@ function Philosophy() {
           ].map((c, i) => (
             <Reveal key={c.k} delay={i * 0.1}>
               <div>
-                <div className="font-display text-lg">{c.k}</div>
-                <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                <div className="font-display text-2xl text-[color:var(--foreground)]">{c.k}</div>
+                <div className="mt-2 text-sm text-[color:var(--muted-foreground)] leading-relaxed">
                   {c.v}
                 </div>
               </div>
@@ -707,7 +853,7 @@ function Philosophy() {
 
 function Journey() {
   return (
-    <section id="journey" className="relative mx-auto max-w-7xl px-6 py-32">
+    <section id="journey" className="relative mx-auto max-w-[1540px] px-8 md:px-12 py-32">
       <SectionLabel chapter="01" title="Journey · Experience" />
       <Reveal>
         <h2 className="mt-8 max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02] tracking-tight">
@@ -718,7 +864,7 @@ function Journey() {
       <div className="relative mt-24">
         <div
           aria-hidden
-          className="absolute left-[18px] top-0 h-full w-px bg-gradient-to-b from-transparent via-[color:var(--foreground)]/30 to-transparent md:left-1/2"
+          className="absolute left-[18px] top-0 h-full w-px bg-gradient-to-b from-transparent via-[color:var(--gold)]/30 to-transparent md:left-1/2"
         />
         <div className="space-y-24">
           {EXPERIENCES.map((exp, idx) => (
@@ -726,18 +872,18 @@ function Journey() {
               <article className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-16">
                 <span
                   aria-hidden
-                  className="absolute left-[10px] top-2 h-4 w-4 rounded-full border-4 border-[color:var(--background)] bg-[color:var(--gold)] shadow-[0_0_0_2px_rgba(184,147,95,0.4)] md:left-1/2 md:-translate-x-1/2"
+                  className="absolute left-[10px] top-2 h-4 w-4 rounded-full border-4 border-[color:var(--background)] bg-[color:var(--gold)] shadow-[0_0_0_4px_rgba(200,148,50,0.25)] md:left-1/2 md:-translate-x-1/2 animate-pulse"
                 />
                 <div className={idx % 2 === 0 ? "md:pr-16 md:text-right" : "md:order-2 md:pl-16"}>
                   <div className="pl-10 md:pl-0">
-                    <div className="font-mono-editorial text-xs uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                    <div className="font-mono text-xs uppercase tracking-[0.28em] text-[color:var(--gold)]">
                       Chapter {exp.chapter}
                     </div>
-                    <h3 className="mt-3 font-display text-3xl md:text-4xl">{exp.company}</h3>
+                    <h3 className="mt-3 font-display text-4xl">{exp.company}</h3>
                     <div className="mt-2 text-sm text-[color:var(--muted-foreground)]">
                       {exp.role} · {exp.subtitle}
                     </div>
-                    <div className="mt-1 font-mono-editorial text-xs uppercase tracking-widest text-[color:var(--muted-foreground)]">
+                    <div className="mt-1 font-mono text-xs uppercase tracking-widest text-[color:var(--muted-foreground)]">
                       {exp.period} · {exp.location}
                     </div>
                   </div>
@@ -745,26 +891,26 @@ function Journey() {
                 <div className={idx % 2 === 0 ? "" : "md:order-1"}>
                   <div className="space-y-6 pl-10 md:pl-0">
                     {exp.projects.map((p) => (
-                      <div key={p.name} className="glass grain rounded-2xl p-6">
-                        <div className="flex items-baseline justify-between gap-4">
-                          <h4 className="font-display text-xl">{p.name}</h4>
-                          <span className="font-mono-editorial text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)]">
+                      <div key={p.name} className="glass grain rounded-2xl p-8 hover:border-[color:var(--gold)]/30 transition-all duration-300">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[color:var(--gold)]/10 pb-4 mb-4">
+                          <h4 className="font-display text-2xl text-[color:var(--foreground)]">{p.name}</h4>
+                          <span className="font-mono text-[9px] uppercase tracking-widest text-[color:var(--gold)] bg-[color:var(--gold)]/10 px-2 py-0.5 rounded">
                             {p.tagline}
                           </span>
                         </div>
-                        <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[color:var(--muted-foreground)]">
+                        <ul className="mt-4 space-y-3 text-sm leading-relaxed text-[color:var(--muted-foreground)]">
                           {p.bullets.map((b) => (
                             <li key={b} className="flex gap-3">
-                              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[color:var(--gold)]" />
+                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
                               <span>{b}</span>
                             </li>
                           ))}
                         </ul>
-                        <div className="mt-4 flex flex-wrap gap-2">
+                        <div className="mt-6 flex flex-wrap gap-2">
                           {p.tags.map((t) => (
                             <span
                               key={t}
-                              className="rounded-full border border-[color:var(--foreground)]/15 bg-[color:var(--foreground)]/10 px-3 py-1 text-[11px] uppercase tracking-widest text-[color:var(--foreground)]/80"
+                              className="rounded-full border border-[color:var(--gold)]/15 bg-[color:var(--gold)]/5 px-3 py-1 text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)] hover:text-white hover:border-[color:var(--gold)]/40 transition-colors"
                             >
                               {t}
                             </span>
@@ -806,7 +952,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
   const reverse = index % 2 === 1;
   return (
     <Reveal>
-      <article className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-16">
+      <article className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-16 items-center">
         <motion.div
           ref={ref}
           onMouseMove={onMove}
@@ -816,65 +962,100 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
         >
           <motion.div
             style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }}
-            className="group relative overflow-hidden rounded-3xl border border-[color:var(--foreground)]/35 shadow-[var(--shadow-elegant)]"
+            className="group relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/10 shadow-[var(--shadow-elegant)] transition-all duration-500 hover:border-[color:var(--gold)]/35"
           >
-            <img
-              src={project.image}
-              alt={project.name}
-              width={1600}
-              height={1000}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-[1.2s] group-hover:scale-[1.04]"
-            />
+            <div className="aspect-[16/10] w-full overflow-hidden bg-neutral-950">
+              <img
+                src={project.image}
+                alt={project.name}
+                width={1600}
+                height={1000}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.05]"
+              />
+            </div>
+            
             <div
               aria-hidden
-              className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              style={{ background: "linear-gradient(180deg, transparent 40%, rgba(36,33,29,0.35))" }}
+              className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-80"
             />
-            <div className="absolute left-4 top-4 rounded-full bg-[color:var(--foreground)]/10 px-3 py-1 font-mono-editorial text-[10px] uppercase tracking-widest text-[color:var(--foreground)] backdrop-blur">
-              {project.id} / {project.kicker}
+            
+            {/* Top Badge */}
+            <div className="absolute left-6 top-6 rounded-full bg-black/60 border border-[color:var(--gold)]/15 px-4 py-1.5 font-mono text-[9px] uppercase tracking-widest text-[color:var(--gold)] backdrop-blur-md">
+              {project.id} &bull; {project.kicker}
+            </div>
+
+            {/* Hidden Role Badge inside Image */}
+            <div className="absolute bottom-6 left-6 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--foreground)]/80 bg-black/45 backdrop-blur-md px-3 py-1 rounded border border-white/5">
+              Role: {project.role}
             </div>
           </motion.div>
         </motion.div>
 
-        <div className={"md:col-span-5 " + (reverse ? "md:order-1" : "")}>
-          <h3 className="font-display text-4xl leading-[1.05] md:text-5xl">{project.name}</h3>
-          <p className="mt-4 font-serif-editorial text-lg text-[color:var(--bronze)]">{project.tagline}</p>
+        <div className={"md:col-span-5 flex flex-col justify-center " + (reverse ? "md:order-1" : "")}>
+          <h3 className="font-display text-4xl leading-[1.05] md:text-5xl text-[color:var(--foreground)] font-medium">
+            {project.name}
+          </h3>
+          <p className="mt-4 font-serif-editorial text-xl italic text-[color:var(--gold)]">
+            {project.tagline}
+          </p>
 
-          <div className="mt-8 space-y-6 border-t border-[color:var(--foreground)]/15 pt-6 text-sm">
+          <div className="mt-8 space-y-6 border-t border-[color:var(--gold)]/10 pt-6 text-sm text-[color:var(--muted-foreground)]">
             <div>
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--muted-foreground)]">
-                Role
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                The Challenge
               </div>
-              <div className="mt-1">{project.role}</div>
+              <p className="mt-1.5 leading-relaxed text-[color:var(--muted-foreground)]">
+                {project.challenge}
+              </p>
             </div>
             <div>
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--muted-foreground)]">
-                Challenge
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                The Solution
               </div>
-              <p className="mt-1 leading-relaxed text-[color:var(--muted-foreground)]">{project.challenge}</p>
+              <p className="mt-1.5 leading-relaxed text-[color:var(--muted-foreground)]">
+                {project.solution}
+              </p>
             </div>
             <div>
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--muted-foreground)]">
-                Solution
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                Impact & Value
               </div>
-              <p className="mt-1 leading-relaxed text-[color:var(--muted-foreground)]">{project.solution}</p>
+              <p className="mt-1.5 leading-relaxed text-[color:var(--muted-foreground)]">
+                {project.impact}
+              </p>
             </div>
-            <div>
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--muted-foreground)]">
-                Business value
-              </div>
-              <p className="mt-1 leading-relaxed text-[color:var(--muted-foreground)]">{project.impact}</p>
-            </div>
+
+            {/* Tech chips */}
             <div className="flex flex-wrap gap-2 pt-2">
               {project.stack.map((s) => (
                 <span
                   key={s}
-                  className="rounded-full border border-[color:var(--foreground)]/20 px-3 py-1 text-[11px] uppercase tracking-widest"
+                  className="rounded-full border border-[color:var(--gold)]/15 bg-[color:var(--gold)]/5 px-3 py-1 text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)] hover:border-[color:var(--gold)]/30 hover:text-white transition-colors"
                 >
                   {s}
                 </span>
               ))}
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-4 pt-4 border-t border-[color:var(--gold)]/5">
+              <a
+                href="https://github.com/Dharsanrobin"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-black transition-all hover:bg-[color:var(--gold)]"
+              >
+                GitHub
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
+              >
+                Live Demo
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </a>
             </div>
           </div>
         </div>
@@ -885,22 +1066,23 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
 
 function Work() {
   return (
-    <section id="work" className="relative bg-[color:var(--secondary-bg)]/60 py-32">
-      <div className="mx-auto max-w-7xl px-6">
+    <section id="work" className="relative bg-[color:var(--secondary-bg)]/60 py-32 border-y border-[color:var(--gold)]/10">
+      <div className="mx-auto max-w-[1540px] px-8 md:px-12">
         <SectionLabel chapter="02" title="Selected Work" />
-        <div className="mt-8 flex items-end justify-between gap-8">
+        <div className="mt-8 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-[color:var(--gold)]/5 pb-12">
           <Reveal>
             <h2 className="max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02]">
               Four projects. Each one solved a real problem.
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
-            <div className="hidden max-w-sm text-sm text-[color:var(--muted-foreground)] md:block">
+            <div className="max-w-sm text-sm text-[color:var(--muted-foreground)] leading-relaxed">
               A closer look at the platforms and dashboards I&apos;ve shipped — the challenges they posed,
               the decisions behind them, and the impact they carried.
             </div>
           </Reveal>
         </div>
+
 
         <div className="mt-24 space-y-32 ">
           {PROJECTS.map((p, i) => (
@@ -915,7 +1097,7 @@ function Work() {
 function Craft() {
   const [active, setActive] = useState(0);
   return (
-    <section id="craft" className="relative mx-auto max-w-7xl px-6 py-32">
+    <section id="craft" className="relative mx-auto max-w-[1540px] px-8 md:px-12 py-32 border-b border-[color:var(--gold)]/10">
       <SectionLabel chapter="03" title="Craft · Skills" />
       <Reveal>
         <h2 className="mt-8 max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02]">
@@ -925,7 +1107,7 @@ function Craft() {
 
       <div className="mt-20 grid grid-cols-1 gap-10 md:grid-cols-12">
         <div className="md:col-span-4">
-          <div className="sticky top-32 space-y-2">
+          <div className="sticky top-32 space-y-3">
             {SKILL_GROUPS.map((g, i) => (
               <button
                 key={g.title}
@@ -933,14 +1115,14 @@ function Craft() {
                 onFocus={() => setActive(i)}
                 onClick={() => setActive(i)}
                 className={
-                  "group flex w-full items-baseline justify-between rounded-2xl border px-5 py-4 text-left transition-all " +
+                  "group flex w-full items-baseline justify-between rounded-2xl border px-6 py-5 text-left transition-all duration-300 cursor-pointer " +
                   (active === i
-                    ? "border-[color:var(--foreground)]/30 bg-white/60 shadow-[var(--shadow-soft)]"
-                    : "border-transparent hover:border-[color:var(--foreground)]/15")
+                    ? "border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 shadow-[var(--shadow-soft)]"
+                    : "border-transparent hover:border-[color:var(--gold)]/10 hover:bg-white/[0.01]")
                 }
               >
-                <span className="font-display text-lg">{g.title}</span>
-                <span className="font-mono-editorial text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)]">
+                <span className={`font-display text-xl transition-colors duration-300 ${active === i ? "text-[color:var(--gold)]" : "text-[color:var(--foreground)]"}`}>{g.title}</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)]">
                   0{i + 1}
                 </span>
               </button>
@@ -956,12 +1138,12 @@ function Craft() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.5, ease: [0.22, 0.9, 0.28, 1] }}
-              className="glass grain rounded-3xl p-8 md:p-12"
+              className="glass grain rounded-3xl p-10 md:p-14"
             >
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
                 {String(active + 1).padStart(2, "0")} · Category
               </div>
-              <h3 className="mt-3 font-display text-3xl md:text-4xl">{SKILL_GROUPS[active].title}</h3>
+              <h3 className="mt-3 font-display text-3xl md:text-4xl text-[color:var(--foreground)]">{SKILL_GROUPS[active].title}</h3>
               <div className="mt-8 flex flex-wrap gap-3">
                 {SKILL_GROUPS[active].items.map((s, i) => (
                   <motion.span
@@ -969,7 +1151,7 @@ function Craft() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.04 * i, duration: 0.4 }}
-                    className="cursor-default rounded-full border border-[color:var(--foreground)]/20 bg-white/60 px-4 py-2 text-sm transition-all hover:-translate-y-0.5 hover:border-[color:var(--gold)] hover:text-[color:var(--bronze)]"
+                    className="cursor-default rounded-full border border-[color:var(--gold)]/15 bg-[color:var(--gold)]/5 px-4 py-2.5 text-xs font-medium tracking-wide uppercase text-[color:var(--muted-foreground)] hover:text-white hover:border-[color:var(--gold)]/40 hover:-translate-y-0.5 transition-all duration-300"
                   >
                     {s}
                   </motion.span>
@@ -985,17 +1167,17 @@ function Craft() {
 
 function Stack() {
   return (
-    <section id="stack" className="relative py-32">
+    <section id="stack" className="relative py-32 border-b border-[color:var(--gold)]/10">
       <div
         aria-hidden
         className="absolute inset-0 opacity-40"
         style={{
           backgroundImage:
-            "radial-gradient(rgba(36,33,29,0.12) 1px, transparent 1px)",
+            "radial-gradient(rgba(200,148,50,0.08) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="relative mx-auto max-w-[1540px] px-8 md:px-12">
         <SectionLabel chapter="04" title="Ecosystem · Tech Stack" />
         <Reveal>
           <h2 className="mt-8 max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02]">
@@ -1007,18 +1189,18 @@ function Stack() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {STACK_FLOW.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.06}>
-                <div className="glass grain relative rounded-2xl p-6">
-                  <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                <div className="glass grain relative rounded-2xl p-8 hover:border-[color:var(--gold)]/35 transition-all duration-300">
+                  <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
                     Step {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div className="mt-3 font-display text-2xl">{s.label}</div>
-                  <div className="mt-2 text-xs text-[color:var(--muted-foreground)]">{s.note}</div>
+                  <div className="mt-4 font-display text-2xl text-[color:var(--foreground)]">{s.label}</div>
+                  <div className="mt-2 text-xs text-[color:var(--muted-foreground)] leading-relaxed">{s.note}</div>
                   {i < STACK_FLOW.length - 1 && (
                     <span
                       aria-hidden
-                      className="absolute right-3 top-1/2 hidden -translate-y-1/2 text-[color:var(--foreground)]/40 md:block"
+                      className="absolute right-4 top-1/2 hidden -translate-y-1/2 text-[color:var(--gold)]/40 md:block font-light text-xl"
                     >
-                      →
+                      &rarr;
                     </span>
                   )}
                 </div>
@@ -1027,7 +1209,7 @@ function Stack() {
           </div>
 
           <Reveal delay={0.3}>
-            <p className="mx-auto mt-16 max-w-2xl text-center text-sm text-[color:var(--muted-foreground)]">
+            <p className="mx-auto mt-16 max-w-2xl text-center text-sm text-[color:var(--muted-foreground)] leading-relaxed">
               No handoffs required — one engineer who can build the frontend, own the backend, and ship without waiting on someone else.
             </p>
           </Reveal>
@@ -1039,39 +1221,39 @@ function Stack() {
 
 function EducationSection() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-32">
+    <section className="mx-auto max-w-[1540px] px-8 md:px-12 py-32 border-b border-[color:var(--gold)]/10">
       <SectionLabel chapter="05" title="Foundations · Education" />
       <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
         <Reveal>
-          <div className="glass grain h-full rounded-2xl p-8">
-            <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+          <div className="glass grain h-full rounded-2xl p-8 hover:border-[color:var(--gold)]/30 transition-all duration-300">
+            <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
               Degree
             </div>
-            <h3 className="mt-3 font-display text-2xl">B.Sc. Computer Science</h3>
-            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
-              Manonmaniam Sundaranar University · Graduated 2022 · 72% CGPA.
+            <h3 className="mt-3 font-display text-2xl text-[color:var(--foreground)]">B.Sc. Computer Science</h3>
+            <p className="mt-4 text-sm text-[color:var(--muted-foreground)] leading-relaxed">
+              Manonmaniam Sundaranar University &bull; Graduated 2022 &bull; 72% CGPA.
             </p>
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <div className="glass grain h-full rounded-2xl p-8">
-            <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+          <div className="glass grain h-full rounded-2xl p-8 hover:border-[color:var(--gold)]/30 transition-all duration-300">
+            <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
               Certification
             </div>
-            <h3 className="mt-3 font-display text-2xl">Frontend &amp; Full Stack Development</h3>
-            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
-              QSpiders, Chennai · Jul 2022 — Dec 2022. Intensive certified training that shaped the way I
+            <h3 className="mt-3 font-display text-2xl text-[color:var(--foreground)]">Frontend &amp; Full Stack Development</h3>
+            <p className="mt-4 text-sm text-[color:var(--muted-foreground)] leading-relaxed">
+              QSpiders, Chennai &bull; Jul 2022 — Dec 2022. Intensive certified training that shaped the way I
               write full-stack code.
             </p>
           </div>
         </Reveal>
         <Reveal delay={0.2}>
-          <div className="glass grain h-full rounded-2xl p-8">
-            <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+          <div className="glass grain h-full rounded-2xl p-8 hover:border-[color:var(--gold)]/30 transition-all duration-300">
+            <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
               Languages
             </div>
-            <h3 className="mt-3 font-display text-2xl">English · Tamil · Malayalam</h3>
-            <p className="mt-4 text-sm text-[color:var(--muted-foreground)]">
+            <h3 className="mt-3 font-display text-2xl text-[color:var(--foreground)]">English &bull; Tamil &bull; Malayalam</h3>
+            <p className="mt-4 text-sm text-[color:var(--muted-foreground)] leading-relaxed">
               Fluent across three languages — comfortable working with distributed and multilingual teams.
             </p>
           </div>
@@ -1083,34 +1265,35 @@ function EducationSection() {
 
 function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden bg-[color:var(--foreground)] py-32 text-[color:var(--background)]">
+    <section id="contact" className="relative overflow-hidden bg-[color:var(--foreground)] py-32 text-black">
+      {/* ambient gold glows for white background */}
       <div
         aria-hidden
         className="pointer-events-none absolute -left-40 top-0 h-[500px] w-[500px] rounded-full opacity-40 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(184,147,95,0.7), transparent 60%)" }}
+        style={{ background: "radial-gradient(circle, rgba(200,148,50,0.6), transparent 60%)" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-40 bottom-0 h-[600px] w-[600px] rounded-full opacity-30 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(146,116,87,0.8), transparent 60%)" }}
+        className="pointer-events-none absolute -right-40 bottom-0 h-[600px] w-[600px] rounded-full opacity-35 blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(77,74,36,0.5), transparent 60%)" }}
       />
 
-      <div className="relative mx-auto max-w-6xl px-6">
-        <div className="flex items-center gap-4 text-xs uppercase tracking-[0.28em] text-[color:var(--background)]/60">
-          <span className="font-mono-editorial">06</span>
-          <span className="h-px w-10 bg-[color:var(--background)]/40" />
+      <div className="relative mx-auto max-w-[1540px] px-8 md:px-12">
+        <div className="flex items-center gap-4 text-xs uppercase tracking-[0.28em] text-black/60">
+          <span className="font-mono">06</span>
+          <span className="h-px w-10 bg-black/40" />
           <span>Contact</span>
         </div>
 
         <Reveal>
-          <h2 className="mt-10 max-w-4xl font-display text-[clamp(3rem,7vw,6rem)] leading-[0.98] tracking-tight">
+          <h2 className="mt-10 max-w-4xl font-display text-[clamp(3rem,7vw,5.5rem)] leading-[0.98] tracking-tight">
             Looking for a React developer <br />
-            who <span className="font-serif-editorial text-[color:var(--gold)]">ships, not just codes</span>?
+            who <span className="font-serif-editorial text-[color:var(--gold)] italic">ships, not just codes</span>?
           </h2>
         </Reveal>
 
         <Reveal delay={0.15}>
-          <p className="mt-8 max-w-xl text-lg text-[color:var(--background)]/70">
+          <p className="mt-8 max-w-xl text-lg text-black/70 leading-relaxed font-medium">
             Full-time roles, freelance engagements, or a quick call to see if there&apos;s a fit —
             I reply fast and I&apos;m ready to start.
           </p>
@@ -1121,18 +1304,18 @@ function Contact() {
             <a
               href="mailto:dharsan2710@gmail.com"
               data-magnetic
-              className="group block rounded-3xl border border-[color:var(--background)]/15 p-8 transition-colors hover:border-[color:var(--gold)]"
+              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--background)]/50">
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
                 Email
               </div>
-              <div className="mt-3 font-display text-2xl md:text-3xl">dharsan2710@gmail.com</div>
-              <div className="mt-4 text-sm text-[color:var(--background)]/60">
+              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">dharsan2710@gmail.com</div>
+              <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Best for role details, JDs, and next-step conversations.
               </div>
-              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)]">
+              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)] font-bold">
                 Write to me
-                <span className="transition-transform group-hover:translate-x-1">→</span>
+                <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </div>
             </a>
           </Reveal>
@@ -1141,18 +1324,18 @@ function Contact() {
             <a
               href="tel:+918489260162"
               data-magnetic
-              className="group block rounded-3xl border border-[color:var(--background)]/15 p-8 transition-colors hover:border-[color:var(--gold)]"
+              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--background)]/50">
-                Phone · Chennai, TN
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
+                Phone &bull; Chennai, TN
               </div>
-              <div className="mt-3 font-display text-2xl md:text-3xl">+91 84892 60162</div>
-              <div className="mt-4 text-sm text-[color:var(--background)]/60">
+              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">+91 84892 60162</div>
+              <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Available for calls during Indian business hours.
               </div>
-              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)]">
+              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)] font-bold">
                 Call now
-                <span className="transition-transform group-hover:translate-x-1">→</span>
+                <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </div>
             </a>
           </Reveal>
@@ -1163,18 +1346,18 @@ function Contact() {
               target="_blank"
               rel="noreferrer"
               data-magnetic
-              className="group block rounded-3xl border border-[color:var(--background)]/15 p-8 transition-colors hover:border-[color:var(--gold)]"
+              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--background)]/50">
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
                 GitHub
               </div>
-              <div className="mt-3 font-display text-2xl md:text-3xl">Dharsanrobin</div>
-              <div className="mt-4 text-sm text-[color:var(--background)]/60">
+              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">Dharsanrobin</div>
+              <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Code, commits, and the projects behind this portfolio.
               </div>
-              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)]">
+              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)] font-bold">
                 View profile
-                <span className="transition-transform group-hover:translate-x-1">↗</span>
+                <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </div>
             </a>
           </Reveal>
@@ -1185,25 +1368,25 @@ function Contact() {
               target="_blank"
               rel="noreferrer"
               data-magnetic
-              className="group block rounded-3xl border border-[color:var(--background)]/15 p-8 transition-colors hover:border-[color:var(--gold)]"
+              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
-              <div className="font-mono-editorial text-[10px] uppercase tracking-[0.28em] text-[color:var(--background)]/50">
+              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
                 LinkedIn
               </div>
-              <div className="mt-3 font-display text-2xl md:text-3xl">Dharsan R</div>
-              <div className="mt-4 text-sm text-[color:var(--background)]/60">
+              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">Dharsan R</div>
+              <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Full work history, recommendations, and career updates.
               </div>
-              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)]">
+              <div className="mt-6 inline-flex items-center gap-2 text-sm text-[color:var(--gold)] font-bold">
                 Connect
-                <span className="transition-transform group-hover:translate-x-1">↗</span>
+                <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </div>
             </a>
           </Reveal>
         </div>
 
-        <div className="mt-16 flex items-center justify-center border-t border-[color:var(--background)]/15 pt-8 text-sm text-[color:var(--background)]/60">
-          <span className="font-mono-editorial text-xs uppercase tracking-widest">
+        <div className="mt-16 flex items-center justify-center border-t border-black/10 pt-8 text-sm text-black/45">
+          <span className="font-mono text-xs uppercase tracking-widest">
             © {new Date().getFullYear()} Dharsan R
           </span>
         </div>
@@ -1223,12 +1406,15 @@ function ScrollProgress() {
   );
 }
 
-/* ---------------- Page ---------------- */
-
 export default function App() {
   useLenis();
+  const [introFinished, setIntroFinished] = useState(false);
+
   return (
     <div className="relative overflow-x-hidden">
+      <AnimatePresence>
+        {!introFinished && <IntroOverlay onComplete={() => setIntroFinished(true)} />}
+      </AnimatePresence>
       <ScrollProgress />
 
       <Nav />
@@ -1245,3 +1431,4 @@ export default function App() {
     </div>
   );
 }
+
