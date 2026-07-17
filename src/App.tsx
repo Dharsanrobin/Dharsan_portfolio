@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from "motion/react";
 import Lenis from "lenis";
+import { Home, Briefcase, User, CodeXml, Layers, Mail, Phone, Github, Linkedin, Download, X } from "lucide-react";
 
 import portrait from "@/assets/portrait.jpeg";
 import projectNutrade from "@/assets/martoz.jpeg";
@@ -266,7 +267,7 @@ function MagneticButton({
       onMouseLeave={onLeave}
       style={{ x: sx, y: sy }}
       className={
-        "group inline-flex items-center gap-3 rounded-full px-7 py-4 text-sm font-medium transition-colors " +
+        "group flex w-full md:w-auto justify-center md:inline-flex items-center gap-3 rounded-full px-7 py-4 text-sm font-medium transition-colors " +
         (variant === "primary"
           ? "bg-[color:var(--foreground)] text-[color:var(--background)] hover:bg-[color:var(--bronze)]"
           : "border border-[color:var(--foreground)]/25 text-[color:var(--foreground)] hover:border-[color:var(--foreground)]/60")
@@ -416,32 +417,10 @@ function Nav() {
     </a>
   </div></>
 
-        {/* Mobile Hamburger Button */}
-        <button
-          onClick={() => setIsOpen(!open)}
-          aria-label="Toggle Menu"
-          className="flex h-10 w-10 flex-col items-end justify-center gap-1.5 md:hidden z-50 cursor-pointer relative"
-        >
-          <motion.span
-            animate={open() ? { rotate: 45, y: 6, width: "24px" } : { rotate: 0, y: 0, width: "24px" }}
-            transition={{ duration: 0.3 }}
-            className="h-[2px] bg-[color:var(--foreground)] rounded-full"
-          />
-          <motion.span
-            animate={open() ? { opacity: 0, width: "0px" } : { opacity: 1, width: "18px" }}
-            transition={{ duration: 0.2 }}
-            className="h-[2px] bg-[color:var(--foreground)] rounded-full"
-          />
-          <motion.span
-            animate={open() ? { rotate: -45, y: -6, width: "24px" } : { rotate: 0, y: 0, width: "12px" }}
-            transition={{ duration: 0.3 }}
-            className="h-[2px] bg-[color:var(--foreground)] rounded-full"
-          />
-        </button>
 
         {/* Mobile Sidebar */}
         <AnimatePresence>
-          {open() && (
+          {isOpen && (
             <>
               {/* Dark Blur Overlay */}
               <motion.div
@@ -459,64 +438,75 @@ function Nav() {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 28, stiffness: 220 }}
-                className="fixed right-0 top-0 bottom-0 z-45 flex h-full w-[75%] flex-col justify-between bg-black/95 border-l border-[color:var(--gold)]/10 px-8 py-24 backdrop-blur-lg md:hidden"
+                className="fixed right-0 top-0 bottom-0 z-50 flex h-full w-[75%] flex-col justify-between bg-gradient-to-b from-[#1a1403] to-black border-l border-[color:var(--gold)]/20 px-8 py-12 backdrop-blur-lg md:hidden overflow-y-auto"
               >
-                <div className="flex flex-col gap-8 mt-8">
-                  <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--gold)] border-b border-[color:var(--gold)]/15 pb-4">
-                    Navigation
-                  </div>
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="absolute top-6 right-6 text-[color:var(--muted-foreground)] hover:text-white transition-colors"
+                >
+                  <X size={28} className="stroke-1" />
+                </button>
+                <div className="mt-12">
                   <nav className="flex flex-col gap-6">
-                    {menuItems.map((n) => (
+                    {menuItems.map((n) => {
+                      let Icon = Home;
+                      if (n.label === "Work") Icon = Briefcase;
+                      else if (n.label === "Journey") Icon = User;
+                      else if (n.label === "Skills") Icon = CodeXml;
+                      else if (n.label === "Tech Stack") Icon = Layers;
+                      else if (n.label === "Contact") Icon = Mail;
+                      
+                      const isHome = n.label === "Home";
+                      return (
+                        <a
+                          key={n.label}
+                          href={n.href}
+                          onClick={() => setIsOpen(false)}
+                          className={`flex items-center gap-4 font-display text-xl font-light tracking-wide transition-colors hover:text-[color:var(--gold)] ${isHome ? "text-[color:var(--gold)]" : "text-[color:var(--foreground)]"}`}
+                        >
+                          <Icon size={20} className="stroke-1" />
+                          {n.label}
+                        </a>
+                      );
+                    })}
+                    <div className="mt-2 flex flex-col items-start gap-3">
                       <a
-                        key={n.label}
-                        href={n.href}
+                        href={resumePdf}
+                        download="Dharsan.R-Resume.pdf"
                         onClick={() => setIsOpen(false)}
-                        className="font-display text-4xl font-light tracking-wide text-[color:var(--foreground)] transition-colors hover:text-[color:var(--gold)]"
+                        className="flex items-center gap-4 rounded-lg border border-[color:var(--gold)]/20 px-5 py-2.5 font-display text-xl font-light tracking-wide text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)]/10"
                       >
-                        {n.label}
+                        <Download size={20} className="stroke-1" />
+                        Resume
                       </a>
-                    ))}
-                    <a
-                      href={resumePdf}
-                      download="Dharsan.R-Resume.pdf"
-                      onClick={() => setIsOpen(false)}
-                      className="font-display text-4xl font-light tracking-wide text-[color:var(--gold)] flex items-center gap-3"
-                    >
-                      Resume
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    </a>
+                      <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--foreground)]">
+                        DOWNLOAD CV
+                      </div>
+                    </div>
                   </nav>
                 </div>
 
                 <div className="flex flex-col gap-6">
-                  <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--muted-foreground)]">
+                  <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--gold)] border-b border-[color:var(--gold)]/15 pb-4">
                     Contact Details
                   </div>
-                  <div className="flex flex-col gap-3 font-sans text-sm">
-                    <a href="mailto:dharsan2710@gmail.com" className="text-[color:var(--muted-foreground)] hover:text-white transition-colors">
+                  <div className="flex flex-col gap-5 font-sans text-sm">
+                    <a href="mailto:dharsan2710@gmail.com" className="flex items-center gap-4 text-[color:var(--muted-foreground)] hover:text-white transition-colors">
+                      <Mail size={18} className="stroke-1" />
                       dharsan2710@gmail.com
                     </a>
-                    <a href="tel:+918489260162" className="text-[color:var(--muted-foreground)] hover:text-white transition-colors">
+                    <a href="tel:+918489260162" className="flex items-center gap-4 text-[color:var(--muted-foreground)] hover:text-white transition-colors">
+                      <Phone size={18} className="stroke-1" />
                       +91 84892 60162
                     </a>
-                    <div className="flex gap-4 mt-2">
-                      <a
-                        href="https://github.com/Dharsanrobin"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[color:var(--gold)] hover:text-white transition-colors"
-                      >
-                        GitHub
-                      </a>
-                      <a
-                        href="https://www.linkedin.com/in/dharsan-r-999930280/"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[color:var(--gold)] hover:text-white transition-colors"
-                      >
-                        LinkedIn
-                      </a>
-                    </div>
+                    <a href="https://github.com/Dharsanrobin" target="_blank" rel="noreferrer" className="flex items-center gap-4 text-[color:var(--gold)] hover:text-white transition-colors">
+                      <Github size={18} className="stroke-1" />
+                      GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/dharsan-r-999930280/" target="_blank" rel="noreferrer" className="flex items-center gap-4 text-[color:var(--gold)] hover:text-white transition-colors">
+                      <Linkedin size={18} className="stroke-1" />
+                      LinkedIn
+                    </a>
                   </div>
                 </div>
               </motion.div>
@@ -622,7 +612,7 @@ function Hero() {
           </Reveal>
 
           <Reveal delay={0.3}>
-            <div className="mt-12 flex flex-wrap items-center gap-4">
+            <div className="mt-12 flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full md:w-auto">
               <MagneticButton href="#work">View Projects</MagneticButton>
               <MagneticButton href="#contact" variant="ghost">
                 Contact
@@ -630,7 +620,7 @@ function Hero() {
               <a
                 href={resumePdf}
                 download="Dharsan.R-Resume.pdf"
-                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/30 px-7 py-4 text-sm font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
+                className="flex w-full md:w-auto justify-center md:inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/30 px-7 py-4 text-sm font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Resume
