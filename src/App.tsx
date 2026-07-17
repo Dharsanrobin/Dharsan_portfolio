@@ -1021,7 +1021,7 @@ function Journey() {
                           <div className="text-sm text-[color:var(--muted-foreground)] mt-1">{p.tagline}</div>
                         </div>
                         <div className="shrink-0 rounded-full bg-[color:var(--gold)] text-black border   border-[color:var(--gold)]/20 px-4 py-1.5 text-xs font-mono uppercase tracking-widest text-[color:var(--gold)] group-hover:bg-[color:var(--gold)] group-hover:text-black transition-colors">
-                          My role
+                          View My role
                         </div>
                       </button>
                     ))}
