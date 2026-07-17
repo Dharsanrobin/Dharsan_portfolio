@@ -775,7 +775,7 @@ function Hero() {
       </motion.div>
 
       {/* marquee */}
-      <div className="relative border-y border-black/10 bg-gold/50 py-4 shadow-[0_0_30px_rgba(200,161,77,0.25)]">
+      <div className="relative border-y border-black/10 bg-gold/50 py-4 shadow-[0_0_30px_rgba(200,161,77,0.25)] mt-17">
         <div className="flex overflow-hidden">
           <div className="animate-marquee flex shrink-0 items-center gap-14 pr-14 font-display text-xl italic text- md:text-xl">
             {Array.from({ length: 2 }).flatMap((_, i) =>
