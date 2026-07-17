@@ -109,7 +109,7 @@ const PROJECTS = [
     impact:
       "Runs live tournaments end to end with synchronized rosters, tight budget enforcement, and no drift between organisers and teams.",
   },
-  
+
   {
     id: "02",
     name: "Martoz",
@@ -125,7 +125,7 @@ const PROJECTS = [
     impact:
       "Gave the shop a working storefront and searchable product catalog, with content built to rank rather than just list.",
   },
-  
+
   {
     id: "03",
     name: "BakeBuddy",
@@ -373,146 +373,152 @@ function Nav() {
       initial={{ y: -30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.9, ease: [0.22, 0.9, 0.28, 1] }}
-      className={`fixed inset-x-0 top-0 z-50 flex justify-center transition-all duration-300 ${
-        scrolled ? "bg-black/85 backdrop-blur-md border-b border-[color:var(--gold)]/10" : "bg-transparent"
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 flex justify-center transition-all duration-300 ${scrolled ? "bg-black/85 backdrop-blur-md border-b border-[color:var(--gold)]/10" : "bg-transparent"
+        }`}
     >
       <div className="flex w-full max-w-[1540px] items-center justify-between px-8 py-5 transition-all">
         <a href="#top" className="flex items-center gap-2 font-display text-3xl font-medium tracking-tight">
           Dharsan<span className="text-[color:var(--gold)]">.</span>R
         </a>
-        
-        {/* Desktop Nav */}
-        <><nav className="hidden items-center gap-10 md:flex">
-  {NAV.map((n) => {
-    const id = n.href.replace("#", "");
-    const isActive = activeSection === id;
-    return (
-      <a
-        key={n.href}
-        href={n.href}
-        className={"relative pb-1 text-[11px] tracking-[0.2em] uppercase font-semibold transition-colors after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:rounded-full after:bg-[color:var(--gold)] after:transition-all " +
-          (isActive
-            ? "text-[color:var(--foreground)] after:w-full"
-            : "text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)] hover:after:w-full")}
-      >
-        {n.label}
-      </a>
-    );
-  })}
-</nav><div className="hidden items-center gap-4 md:flex">
-    <a
-      href={resumePdf}
-      download="Dharsan.R-Resume.pdf"
-      className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/30 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-      Resume
-    </a>
-    <a
-      href="#contact"
-      className="rounded-full bg-[color:var(--foreground)] px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-black transition-all hover:bg-[color:var(--gold)]"
-    >
-      Get in touch
-    </a>
-  </div></>
 
+        {/* Mobile Hamburger Icon (visible only on mobile) */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle Menu"
+          className="flex md:hidden flex-col items-center justify-center gap-[5px] w-10 h-10 z-50 cursor-pointer text-[color:var(--foreground)]"
+        >
+          <span className={`block w-6 h-[2px] bg-current rounded-full transition-all duration-300 ${isOpen ? "rotate-45 translate-y-1.5" : ""}`} />
+          <span className={`block w-4 h-[2px] bg-[color:var(--gold)] rounded-full transition-all duration-300 ${isOpen ? "opacity-0" : ""}`} />
+          <span className={`block w-6 h-[2px] bg-current rounded-full transition-all duration-300 ${isOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
+        </button>
 
-        {/* Mobile Sidebar */}
-        <AnimatePresence>
-          {isOpen && (
-            <>
-              {/* Dark Blur Overlay */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                onClick={() => setIsOpen(false)}
-                className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md md:hidden"
-              />
+        {/* Unified Nav Menu Panel */}
+        <div
+          className={`
+            fixed md:static inset-y-0 right-0 z-40 md:z-auto
+            flex flex-col md:flex-row md:items-center justify-between md:justify-end gap-8 md:gap-10
+            w-[75%] md:w-auto h-[100dvh] md:h-auto
+            bg-[#f5f0e4] md:bg-transparent
+            border-l border-black/10 md:border-none
+            px-8 py-16 md:p-0
+            backdrop-blur-lg md:backdrop-blur-none
+            transition-transform duration-300 ease-in-out
+            overflow-y-auto md:overflow-visible
+            ${isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
+          `}
+        >
+          {/* Close button (visible only on mobile) */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="md:hidden absolute top-6 right-6 text-black/40 hover:text-black transition-colors"
+          >
+            <X size={28} className="stroke-1" />
+          </button>
 
-              {/* Sidebar Menu */}
-              <motion.div
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", damping: 28, stiffness: 220 }}
-                className="fixed right-0 top-0 bottom-0 z-50 flex h-full w-[75%] flex-col justify-between bg-gradient-to-b from-[#1a1403] to-black border-l border-[color:var(--gold)]/20 px-8 py-12 backdrop-blur-lg md:hidden overflow-y-auto"
-              >
-                <button 
+          {/* Core Navigation tree - single map of menuItems */}
+          <nav className="flex flex-col md:flex-row gap-6 md:gap-10">
+            {menuItems.map((n) => {
+              let Icon = Home;
+              if (n.label === "Work") Icon = Briefcase;
+              else if (n.label === "Journey") Icon = User;
+              else if (n.label === "Skills") Icon = CodeXml;
+              else if (n.label === "Tech Stack") Icon = Layers;
+              else if (n.label === "Contact") Icon = Mail;
+
+              const id = n.href.replace("#", "");
+              const isActive = activeSection === id;
+
+              return (
+                <a
+                  key={n.label}
+                  href={n.href}
                   onClick={() => setIsOpen(false)}
-                  className="absolute top-6 right-6 text-[color:var(--muted-foreground)] hover:text-white transition-colors"
-                >
-                  <X size={28} className="stroke-1" />
-                </button>
-                <div className="mt-12">
-                  <nav className="flex flex-col gap-6">
-                    {menuItems.map((n) => {
-                      let Icon = Home;
-                      if (n.label === "Work") Icon = Briefcase;
-                      else if (n.label === "Journey") Icon = User;
-                      else if (n.label === "Skills") Icon = CodeXml;
-                      else if (n.label === "Tech Stack") Icon = Layers;
-                      else if (n.label === "Contact") Icon = Mail;
-                      
-                      const isHome = n.label === "Home";
-                      return (
-                        <a
-                          key={n.label}
-                          href={n.href}
-                          onClick={() => setIsOpen(false)}
-                          className={`flex items-center gap-4 font-display text-xl font-light tracking-wide transition-colors hover:text-[color:var(--gold)] ${isHome ? "text-[color:var(--gold)]" : "text-[color:var(--foreground)]"}`}
-                        >
-                          <Icon size={20} className="stroke-1" />
-                          {n.label}
-                        </a>
-                      );
-                    })}
-                    <div className="mt-2 flex flex-col items-start gap-3">
-                      <a
-                        href={resumePdf}
-                        download="Dharsan.R-Resume.pdf"
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-4 rounded-lg border border-[color:var(--gold)]/20 px-5 py-2.5 font-display text-xl font-light tracking-wide text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)]/10"
-                      >
-                        <Download size={20} className="stroke-1" />
-                        Resume
-                      </a>
-                      <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--foreground)]">
-                        DOWNLOAD CV
-                      </div>
-                    </div>
-                  </nav>
-                </div>
+                  className={`
+                    relative transition-all duration-300
+                    /* Desktop Links style */
+                    md:pb-1 md:text-[11px] md:tracking-[0.2em] md:uppercase md:font-semibold
+                    md:after:absolute md:after:left-0 md:after:bottom-0 md:after:h-[2px] md:after:w-0 md:after:rounded-full md:after:bg-[color:var(--gold)] md:after:transition-all
+                    ${isActive 
+                      ? "md:text-[color:var(--foreground)] md:after:w-full" 
+                      : "md:text-[color:var(--muted-foreground)] md:hover:text-[color:var(--foreground)] md:hover:after:w-full"
+                    }
 
-                <div className="flex flex-col gap-6">
-                  <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--gold)] border-b border-[color:var(--gold)]/15 pb-4">
-                    Contact Details
-                  </div>
-                  <div className="flex flex-col gap-5 font-sans text-sm">
-                    <a href="mailto:dharsan2710@gmail.com" className="flex items-center gap-4 text-[color:var(--muted-foreground)] hover:text-white transition-colors">
-                      <Mail size={18} className="stroke-1" />
-                      dharsan2710@gmail.com
-                    </a>
-                    <a href="tel:+918489260162" className="flex items-center gap-4 text-[color:var(--muted-foreground)] hover:text-white transition-colors">
-                      <Phone size={18} className="stroke-1" />
-                      +91 84892 60162
-                    </a>
-                    <a href="https://github.com/Dharsanrobin" target="_blank" rel="noreferrer" className="flex items-center gap-4 text-[color:var(--gold)] hover:text-white transition-colors">
-                      <Github size={18} className="stroke-1" />
-                      GitHub
-                    </a>
-                    <a href="https://www.linkedin.com/in/dharsan-r-999930280/" target="_blank" rel="noreferrer" className="flex items-center gap-4 text-[color:var(--gold)] hover:text-white transition-colors">
-                      <Linkedin size={18} className="stroke-1" />
-                      LinkedIn
-                    </a>
-                  </div>
+                    /* Mobile Links style */
+                    flex items-center gap-4 font-display text-xl font-light tracking-wide
+                    ${isActive ? "text-[color:var(--gold)] font-medium" : "text-black/70 hover:text-black"}
+                    md:font-sans md:normal-case md:text-sm md:font-normal md:text-inherit
+                  `}
+                >
+                  <Icon size={20} className="stroke-1 md:hidden" />
+                  {n.label}
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Action buttons & info */}
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-6 md:gap-4 border-t border-black/10 md:border-none pt-6 md:pt-0">
+            {/* Resume button */}
+            <div className="flex flex-col md:flex-row gap-1.5 md:gap-0">
+              <a
+                href={resumePdf}
+                download="Dharsan.R-Resume.pdf"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-center md:inline-flex gap-4 md:gap-2 rounded-lg md:rounded-full border border-[color:var(--gold)]/30 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)]/10 md:hover:bg-[color:var(--gold)] md:hover:text-black md:hover:border-[color:var(--gold)]"
+              >
+                <Download size={16} className="stroke-1 md:w-3.5 md:h-3.5" />
+                Resume
+              </a>
+              <div className="md:hidden font-mono text-[9px] uppercase tracking-[0.3em] text-black/45 text-center mt-1">
+                DOWNLOAD CV
+              </div>
+            </div>
+
+            {/* Get in touch / Contact Details on mobile */}
+            <div className="flex flex-col gap-6 md:block">
+              {/* Desktop-only static Get In Touch button */}
+              <a
+                href="#contact"
+                className="hidden md:inline-block rounded-full bg-[color:var(--foreground)] px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-black transition-all hover:bg-[color:var(--gold)]"
+              >
+                Get in touch
+              </a>
+
+              {/* Mobile-only contact info at bottom of sidebar drawer */}
+              <div className="md:hidden flex flex-col gap-6">
+                <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[color:var(--gold)] border-b border-black/10 pb-4">
+                  Contact Details
                 </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+                <div className="flex flex-col gap-5 font-sans text-sm">
+                  <a href="mailto:dharsan2710@gmail.com" className="flex items-center gap-4 text-black/60 hover:text-black transition-colors">
+                    <Mail size={18} className="stroke-1" />
+                    dharsan2710@gmail.com
+                  </a>
+                  <a href="tel:+918489260162" className="flex items-center gap-4 text-black/60 hover:text-black transition-colors">
+                    <Phone size={18} className="stroke-1" />
+                    +91 84892 60162
+                  </a>
+                  <a href="https://github.com/Dharsanrobin" target="_blank" rel="noreferrer" className="flex items-center gap-4 text-[color:var(--gold)] hover:text-black transition-colors">
+                    <Github size={18} className="stroke-1" />
+                    GitHub
+                  </a>
+                  <a href="https://www.linkedin.com/in/dharsan-r-999930280/" target="_blank" rel="noreferrer" className="flex items-center gap-4 text-[color:var(--gold)] hover:text-black transition-colors">
+                    <Linkedin size={18} className="stroke-1" />
+                    LinkedIn
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Sidebar backdrop overlay (visible only on mobile) */}
+        {isOpen && (
+          <div
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-30 bg-black/70 backdrop-blur-md md:hidden"
+          />
+        )}
       </div>
     </motion.header>
   );
@@ -579,43 +585,29 @@ function Hero() {
         style={{ z: heroZ, rotateX: heroRotX }}
         className="relative mx-auto grid max-w-[1540px] grid-cols-1 gap-12 px-8 pb-24 perspective-hero preserve-3d md:grid-cols-12 md:gap-16 md:pb-40"
       >
-        {/* Mobile-only heading — shows above photo, hidden on desktop */}
-        <div className="md:hidden order-first pb-2">
+        {/* Unified Title Row/Col */}
+        <div className="col-span-1 md:col-span-6 md:col-start-1 md:row-start-1 order-1 md:order-none pb-2 md:pb-0 md:pt-2">
           <Reveal delay={0.06}>
-            <div className="relative">
-              <h1 className="relative z-10 font-iconic text-[clamp(2.8rem,12vw,5rem)] font-black leading-[1] tracking-wide text-[color:var(--foreground)]">
-                <span className="block text-chrome">REACT</span>
-                <span className="block text-[color:var(--foreground)] mt-1">DEVELOPER</span>
+            <div className="relative mt-2 md:mt-8">
+              {/* Single responsive h1 */}
+              <h1 className="relative z-10 font-iconic md:font-display text-[clamp(2.8rem,12vw,5rem)] md:text-[clamp(3.5rem,8.6vw,7.8rem)] font-black leading-[1] md:leading-[0.88] tracking-wide md:tracking-tighter text-[color:var(--foreground)]">
+                {/* On mobile: "REACT". On desktop: "RE" + chrome italic "ACT" */}
+                <span className="block md:hidden text-chrome">REACT</span>
+                <span className="hidden md:inline">RE</span>
+                <span className="hidden md:inline text-chrome font-serif-editorial italic">ACT</span>
+                <br className="hidden md:block" />
+                <span className="block md:inline-block md:mt-2 text-[color:var(--foreground)] mt-1">
+                  DEVELOPER
+                </span>
               </h1>
-              <div className="mt-3 h-px w-16 bg-[color:var(--gold)]/40" />
+              {/* Subtle underline line visible only on mobile */}
+              <div className="md:hidden mt-3 h-px w-16 bg-[color:var(--gold)]/40" />
             </div>
           </Reveal>
         </div>
 
-        {/* Left copy */}
-        <motion.div style={{ opacity }} className="relative order-last md:order-none md:col-span-6 md:pt-2">
-          {/* <Reveal>
-            <div className="hidden md:inline-flex items-center gap-4">
-              <span className="h-px bg-[color:var(--foreground)]/15" />
-              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-[color:var(--muted-foreground)]">
-                Dharsan R - React.js Developer
-              </span>
-            </div>
-          </Reveal> */}
-
-          <Reveal delay={0.08}>
-            <div className="relative mt-8 hidden md:block">
-              <h1 className="relative z-10 font-display text-[clamp(3.5rem,8.6vw,7.8rem)] font-black leading-[0.88] tracking-tighter text-[color:var(--foreground)]">
-                RE
-                <span className="text-chrome font-serif-editorial italic">ACT</span>
-                <br />
-                <span className="relative inline-block mt-2">
-                  DEVELOPER 
-                </span>
-              </h1>
-            </div>
-          </Reveal>
-
+        {/* Left copy (text, buttons, stats) */}
+        <motion.div style={{ opacity }} className="relative order-3 md:order-none md:col-span-6 md:col-start-1 md:row-start-2">
           <Reveal delay={0.2}>
             <p className="mt-10 max-w-xl text-lg leading-relaxed text-[color:var(--muted-foreground)]">
               I&apos;m <span className="text-[color:var(--foreground)]">Dharsan R</span>, a React.js developer with two years
@@ -635,7 +627,7 @@ function Hero() {
                 download="Dharsan.R-Resume.pdf"
                 className="flex w-full md:w-auto justify-center md:inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/30 px-7 py-4 text-sm font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
                 Download Resume
               </a>
             </div>
@@ -651,7 +643,7 @@ function Hero() {
                 <div key={s.v}>
                   <dt className="font-display text-3xl text-[color:var(--foreground)]">{s.k}</dt>
                   <dd className="mt-1 font-mono text-[9px] uppercase tracking-[0.25em] text-[color:var(--muted-foreground)]">
-                    {s.v}
+                     {s.v}
                   </dd>
                 </div>
               ))}
@@ -660,7 +652,7 @@ function Hero() {
         </motion.div>
 
         {/* 3D Portrait stack */}
-        <div className="order-first md:order-none md:col-span-6 flex items-center justify-center">
+        <div className="order-2 md:order-none md:col-span-6 md:col-start-7 md:row-start-1 md:row-span-2 flex items-center justify-center">
           <motion.div
             style={{ y: yPortrait }}
             className="perspective-hero relative mx-auto flex h-[560px] w-full max-w-md items-center justify-center"
@@ -724,7 +716,7 @@ function Hero() {
                       </div>
                     </div>
                     <div className="text-right font-mono text-[9px] uppercase tracking-[0.25em] text-[color:var(--muted-foreground)]">
-                      Chennai 
+                      Chennai
                     </div>
                   </div>
                 </div>
@@ -908,7 +900,7 @@ function ProjectModal({ project, onClose }: { project: ModalProjectData | null; 
             <h3 className="mt-2 font-display text-3xl md:text-4xl text-[color:var(--foreground)]">{project.name}</h3>
 
             <div className="mt-8">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
@@ -977,7 +969,7 @@ function ProjectModal({ project, onClose }: { project: ModalProjectData | null; 
 
 function Journey() {
   const [selectedProject, setSelectedProject] = useState<ModalProjectData | null>(null);
-  
+
   return (
     <section id="journey" className="relative mx-auto max-w-[1540px] px-8 md:px-12 py-32">
       <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
@@ -1089,12 +1081,12 @@ function ProjectCard({ project, index, onViewDetails }: { project: (typeof PROJE
                 className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.05]"
               />
             </div>
-            
+
             <div
               aria-hidden
               className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-80"
             />
-            
+
             {/* Top Badge */}
             <div className="absolute left-6 top-6 rounded-full bg-black/60 border border-[color:var(--gold)]/15 px-4 py-1.5 font-mono text-[9px] uppercase tracking-widest text-[color:var(--gold)] backdrop-blur-md">
               {project.id} &bull; {project.kicker}
@@ -1147,11 +1139,11 @@ function ProjectCard({ project, index, onViewDetails }: { project: (typeof PROJE
 
 function Work() {
   const [selectedProject, setSelectedProject] = useState<ModalProjectData | null>(null);
-  
+
   return (
     <section id="work" className="relative bg-[color:var(--secondary-bg)]/60 py-32 border-y border-[color:var(--gold)]/10">
       <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
-      
+
       <div className="mx-auto max-w-[1540px] px-8 md:px-12">
         <SectionLabel chapter="02" title="Selected Work" />
         <div className="mt-8 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-[color:var(--gold)]/5 pb-12">
