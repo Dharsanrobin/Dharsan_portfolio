@@ -53,7 +53,7 @@ const EXPERIENCES = [
     ],
   },
   {
-    company: "Independent Studio",
+    company: "Freelance development",
     role: "React Frontend Developer",
     subtitle: "Freelance · Team Project",
     period: "Sep 2025 — Mar 2026",
@@ -73,7 +73,7 @@ const EXPERIENCES = [
     ],
   },
   {
-    company: "Independent Studio",
+    company: "Freelance development",
     role: "React Frontend Developer",
     subtitle: "Freelance · Team Project",
     period: "Apr 2026 — Present",
@@ -579,19 +579,32 @@ function Hero() {
         style={{ z: heroZ, rotateX: heroRotX }}
         className="relative mx-auto grid max-w-[1540px] grid-cols-1 gap-12 px-8 pb-24 perspective-hero preserve-3d md:grid-cols-12 md:gap-16 md:pb-40"
       >
-        {/* Left copy */}
-        <motion.div style={{ opacity }} className="relative md:col-span-6 md:pt-6">
-          <Reveal>
-            <div className="inline-flex items-center gap-4">
-              <span className="h-px w-10 bg-[color:var(--foreground)]/15" />
-              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-[color:var(--muted-foreground)]">
-                Portfolio · Dharsan R - React.js Developer
-              </span>
+        {/* Mobile-only heading — shows above photo, hidden on desktop */}
+        <div className="md:hidden order-first pb-2">
+          <Reveal delay={0.06}>
+            <div className="relative">
+              <h1 className="relative z-10 font-iconic text-[clamp(2.8rem,12vw,5rem)] font-black leading-[1] tracking-wide text-[color:var(--foreground)]">
+                <span className="block text-chrome">REACT</span>
+                <span className="block text-[color:var(--foreground)] mt-1">DEVELOPER</span>
+              </h1>
+              <div className="mt-3 h-px w-16 bg-[color:var(--gold)]/40" />
             </div>
           </Reveal>
+        </div>
+
+        {/* Left copy */}
+        <motion.div style={{ opacity }} className="relative order-last md:order-none md:col-span-6 md:pt-2">
+          {/* <Reveal>
+            <div className="hidden md:inline-flex items-center gap-4">
+              <span className="h-px bg-[color:var(--foreground)]/15" />
+              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-[color:var(--muted-foreground)]">
+                Dharsan R - React.js Developer
+              </span>
+            </div>
+          </Reveal> */}
 
           <Reveal delay={0.08}>
-            <div className="relative mt-8">
+            <div className="relative mt-8 hidden md:block">
               <h1 className="relative z-10 font-display text-[clamp(3.5rem,8.6vw,7.8rem)] font-black leading-[0.88] tracking-tighter text-[color:var(--foreground)]">
                 RE
                 <span className="text-chrome font-serif-editorial italic">ACT</span>
@@ -647,7 +660,7 @@ function Hero() {
         </motion.div>
 
         {/* 3D Portrait stack */}
-        <div className="md:col-span-6 flex items-center justify-center">
+        <div className="order-first md:order-none md:col-span-6 flex items-center justify-center">
           <motion.div
             style={{ y: yPortrait }}
             className="perspective-hero relative mx-auto flex h-[560px] w-full max-w-md items-center justify-center"
@@ -770,15 +783,15 @@ function Hero() {
       </motion.div>
 
       {/* marquee */}
-      <div className="relative border-y border-[color:var(--foreground)]/10 bg-[color:var(--secondary-bg)]/40 py-6 backdrop-blur">
+      <div className="relative border-y border-black/10 bg-gold/50 py-4 shadow-[0_0_30px_rgba(200,161,77,0.25)]">
         <div className="flex overflow-hidden">
-          <div className="animate-marquee flex shrink-0 items-center gap-14 pr-14 font-display text-2xl italic text-[color:var(--muted-foreground)] md:text-3xl">
+          <div className="animate-marquee flex shrink-0 items-center gap-14 pr-14 font-display text-xl italic text- md:text-xl">
             {Array.from({ length: 2 }).flatMap((_, i) =>
               ["React.js", "TypeScript", "Spring Boot", "REST APIs", "Tailwind", "MySQL", "Reusable Systems", "Real-time UIs"].map(
                 (t) => (
                   <span key={`${i}-${t}`} className="flex items-center gap-14">
                     <span>{t}</span>
-                    <span className="text-[color:var(--gold)]/50">◆</span>
+                    <span className="text-black">◆</span>
                   </span>
                 ),
               ),
@@ -793,7 +806,7 @@ function Hero() {
 function Philosophy() {
   return (
     <section className="mx-auto max-w-[1540px] px-8 md:px-12 py-32">
-      <SectionLabel chapter="00" title="Philosophy" />
+      <SectionLabel chapter="00" title="Vision" />
 
       <div className="mt-10 grid grid-cols-1 gap-16 md:grid-cols-12">
         <div className="md:col-span-8">
@@ -841,9 +854,134 @@ function Philosophy() {
   );
 }
 
+export type ModalProjectData = {
+  name: string;
+  tagline?: string;
+  kicker?: string;
+  bullets?: string[];
+  solution?: string;
+  impact?: string;
+  tags?: string[];
+  stack?: string[];
+  challenge?: string;
+};
+
+function ProjectModal({ project, onClose }: { project: ModalProjectData | null; onClose: () => void }) {
+  useEffect(() => {
+    if (project) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [project]);
+
+  return (
+    <AnimatePresence>
+      {project && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed left-1/2 top-1/2 z-[101] max-h-[85vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl border border-[color:var(--gold)]/30 bg-gradient-to-br from-[#1c1605] to-black p-8 shadow-2xl md:p-12"
+          >
+            <button
+              onClick={onClose}
+              className="absolute right-6 top-6 text-[color:var(--muted-foreground)] transition-colors hover:text-white"
+            >
+              <X size={24} />
+            </button>
+            <div className="font-mono text-[9px] uppercase tracking-widest text-[color:var(--gold)]">
+              {project.kicker || project.tagline || "Details"}
+            </div>
+            <h3 className="mt-2 font-display text-3xl md:text-4xl text-[color:var(--foreground)]">{project.name}</h3>
+
+            <div className="mt-8">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="mb-6 flex flex-wrap gap-2"
+              >
+                {(project.tags || project.stack || []).map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-[color:var(--gold)]/20 bg-[color:var(--gold)]/10 px-3 py-1 text-[10px] uppercase tracking-widest text-[color:var(--gold)]"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                {project.bullets ? (
+                  <ul className="space-y-4 text-sm leading-relaxed text-[color:var(--muted-foreground)]">
+                    {project.bullets.map((b, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="space-y-6 text-sm leading-relaxed text-[color:var(--muted-foreground)]">
+                    {project.challenge && (
+                      <div>
+                        <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)] mb-2">
+                          The Challenge
+                        </div>
+                        <p>{project.challenge}</p>
+                      </div>
+                    )}
+                    {project.solution && (
+                      <div>
+                        <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)] mb-2">
+                          The Solution
+                        </div>
+                        <p>{project.solution}</p>
+                      </div>
+                    )}
+                    {project.impact && (
+                      <div>
+                        <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)] mb-2">
+                          Impact & Value
+                        </div>
+                        <p>{project.impact}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function Journey() {
+  const [selectedProject, setSelectedProject] = useState<ModalProjectData | null>(null);
+  
   return (
     <section id="journey" className="relative mx-auto max-w-[1540px] px-8 md:px-12 py-32">
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+
       <SectionLabel chapter="01" title="Journey · Experience" />
       <Reveal>
         <h2 className="mt-8 max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02] tracking-tight">
@@ -881,32 +1019,19 @@ function Journey() {
                 <div className={idx % 2 === 0 ? "" : "md:order-1"}>
                   <div className="space-y-6 pl-10 md:pl-0">
                     {exp.projects.map((p) => (
-                      <div key={p.name} className="glass grain rounded-2xl p-8 hover:border-[color:var(--gold)]/30 transition-all duration-300">
-                        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[color:var(--gold)]/10 pb-4 mb-4">
-                          <h4 className="font-display text-2xl text-[color:var(--foreground)]">{p.name}</h4>
-                          <span className="font-mono text-[9px] uppercase tracking-widest text-[color:var(--gold)] bg-[color:var(--gold)]/10 px-2 py-0.5 rounded">
-                            {p.tagline}
-                          </span>
+                      <button
+                        key={p.name}
+                        onClick={() => setSelectedProject(p)}
+                        className="w-full text-left glass grain rounded-2xl p-6 hover:border-[color:var(--gold)]/30 hover:bg-[color:var(--gold)]/5 transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+                      >
+                        <div>
+                          <h4 className="font-display text-xl text-[color:var(--foreground)]">{p.name}</h4>
+                          <div className="text-sm text-[color:var(--muted-foreground)] mt-1">{p.tagline}</div>
                         </div>
-                        <ul className="mt-4 space-y-3 text-sm leading-relaxed text-[color:var(--muted-foreground)]">
-                          {p.bullets.map((b) => (
-                            <li key={b} className="flex gap-3">
-                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
-                              <span>{b}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="mt-6 flex flex-wrap gap-2">
-                          {p.tags.map((t) => (
-                            <span
-                              key={t}
-                              className="rounded-full border border-[color:var(--gold)]/15 bg-[color:var(--gold)]/5 px-3 py-1 text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)] hover:text-white hover:border-[color:var(--gold)]/40 transition-colors"
-                            >
-                              {t}
-                            </span>
-                          ))}
+                        <div className="shrink-0 rounded-full bg-[color:var(--gold)] text-black border   border-[color:var(--gold)]/20 px-4 py-1.5 text-xs font-mono uppercase tracking-widest text-[color:var(--gold)] group-hover:bg-[color:var(--gold)] group-hover:text-black transition-colors">
+                          My role
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -919,7 +1044,7 @@ function Journey() {
   );
 }
 
-function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; index: number }) {
+function ProjectCard({ project, index, onViewDetails }: { project: (typeof PROJECTS)[number]; index: number; onViewDetails: () => void }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
@@ -948,7 +1073,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
           onMouseMove={onMove}
           onMouseLeave={onLeave}
           style={{ perspective: 1000 }}
-          className={"md:col-span-7 " + (reverse ? "md:order-2" : "")}
+          className={"order-first md:col-span-7 " + (reverse ? "md:order-2" : "")}
         >
           <motion.div
             style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }}
@@ -982,7 +1107,7 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
           </motion.div>
         </motion.div>
 
-        <div className={"md:col-span-5 flex flex-col justify-center " + (reverse ? "md:order-1" : "")}>
+        <div className={"order-last md:col-span-5 flex flex-col justify-center " + (reverse ? "md:order-1" : "")}>
           <h3 className="font-display text-4xl leading-[1.05] md:text-5xl text-[color:var(--foreground)] font-medium">
             {project.name}
           </h3>
@@ -990,63 +1115,29 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
             {project.tagline}
           </p>
 
-          <div className="mt-8 space-y-6 border-t border-[color:var(--gold)]/10 pt-6 text-sm text-[color:var(--muted-foreground)]">
-            <div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                The Challenge
-              </div>
-              <p className="mt-1.5 leading-relaxed text-[color:var(--muted-foreground)]">
-                {project.challenge}
-              </p>
-            </div>
-            <div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                The Solution
-              </div>
-              <p className="mt-1.5 leading-relaxed text-[color:var(--muted-foreground)]">
-                {project.solution}
-              </p>
-            </div>
-            <div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                Impact & Value
-              </div>
-              <p className="mt-1.5 leading-relaxed text-[color:var(--muted-foreground)]">
-                {project.impact}
-              </p>
-            </div>
-
-            {/* Tech chips */}
-            <div className="flex flex-wrap gap-2 pt-2">
-              {project.stack.map((s) => (
-                <span
-                  key={s}
-                  className="rounded-full border border-[color:var(--gold)]/15 bg-[color:var(--gold)]/5 px-3 py-1 text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)] hover:border-[color:var(--gold)]/30 hover:text-white transition-colors"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex gap-4 pt-4 border-t border-[color:var(--gold)]/5">
-              <a
-                href="https://github.com/Dharsanrobin"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-black transition-all hover:bg-[color:var(--gold)]"
-              >
-                GitHub
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black hover:border-[color:var(--gold)]"
-              >
-                Live Demo
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-              </a>
-            </div>
+          <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-[color:var(--gold)]/10 pt-6">
+            <button
+              onClick={onViewDetails}
+              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/20 bg-[color:var(--gold)]/10 px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-black"
+            >
+              View Details
+            </button>
+            {/* <a
+              href="https://github.com/Dharsanrobin"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--muted-foreground)] transition-all hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+            >
+              GitHub
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </a> */}
+            {/* <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-[color:var(--muted-foreground)] transition-all hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+            >
+              Live Demo
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a> */}
           </div>
         </div>
       </article>
@@ -1055,8 +1146,12 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[number]; i
 }
 
 function Work() {
+  const [selectedProject, setSelectedProject] = useState<ModalProjectData | null>(null);
+  
   return (
     <section id="work" className="relative bg-[color:var(--secondary-bg)]/60 py-32 border-y border-[color:var(--gold)]/10">
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      
       <div className="mx-auto max-w-[1540px] px-8 md:px-12">
         <SectionLabel chapter="02" title="Selected Work" />
         <div className="mt-8 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-[color:var(--gold)]/5 pb-12">
@@ -1076,7 +1171,7 @@ function Work() {
 
         <div className="mt-24 space-y-32 ">
           {PROJECTS.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
+            <ProjectCard key={p.id} project={p} index={i} onViewDetails={() => setSelectedProject(p)} />
           ))}
         </div>
       </div>
@@ -1255,7 +1350,7 @@ function EducationSection() {
 
 function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden bg-[color:var(--foreground)] py-32 text-black">
+    <section id="contact" className="relative overflow-hidden bg-[color:var(--foreground)] py-10 text-black">
       {/* ambient gold glows for white background */}
       <div
         aria-hidden
@@ -1277,7 +1372,7 @@ function Contact() {
 
         <Reveal>
           <h2 className="mt-10 max-w-4xl font-display text-[clamp(3rem,7vw,5.5rem)] leading-[0.98] tracking-tight">
-            Looking for a React developer <br />
+            Looking for a Software Developer <br />
             who <span className="font-serif-editorial text-[color:var(--gold)] italic">ships, not just codes</span>?
           </h2>
         </Reveal>
@@ -1289,17 +1384,17 @@ function Contact() {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
           <Reveal>
             <a
               href="mailto:dharsan2710@gmail.com"
               data-magnetic
-              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
+              className="group block rounded-3xl border border-black/10 p-5 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
               <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
                 Email
               </div>
-              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">dharsan2710@gmail.com</div>
+              <div className="mt-4 font-display text-lg md:text-xl text-black font-semibold break-all">dharsan2710@gmail.com</div>
               <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Best for role details, JDs, and next-step conversations.
               </div>
@@ -1314,12 +1409,12 @@ function Contact() {
             <a
               href="tel:+918489260162"
               data-magnetic
-              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
+              className="group block rounded-3xl border border-black/10 p-5 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
               <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
                 Phone &bull; Chennai, TN
               </div>
-              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">+91 84892 60162</div>
+              <div className="mt-4 font-display text-xl md:text-2xl text-black font-semibold">+91 84892 60162</div>
               <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Available for calls during Indian business hours.
               </div>
@@ -1336,12 +1431,12 @@ function Contact() {
               target="_blank"
               rel="noreferrer"
               data-magnetic
-              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
+              className="group block rounded-3xl border border-black/10 p-5 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
               <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
                 GitHub
               </div>
-              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">Dharsanrobin</div>
+              <div className="mt-4 font-display text-xl md:text-2xl text-black font-semibold">Dharsanrobin</div>
               <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Code, commits, and the projects behind this portfolio.
               </div>
@@ -1358,12 +1453,12 @@ function Contact() {
               target="_blank"
               rel="noreferrer"
               data-magnetic
-              className="group block rounded-3xl border border-black/10 p-10 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
+              className="group block rounded-3xl border border-black/10 p-5 bg-black/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--gold)]/40 hover:bg-black/[0.04]"
             >
               <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/50">
                 LinkedIn
               </div>
-              <div className="mt-4 font-display text-3xl md:text-4xl text-black font-semibold">Dharsan R</div>
+              <div className="mt-4 font-display text-xl md:text-2xl text-black font-semibold">Dharsan R</div>
               <div className="mt-4 text-sm text-black/60 leading-relaxed">
                 Full work history, recommendations, and career updates.
               </div>
