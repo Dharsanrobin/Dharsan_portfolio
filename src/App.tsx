@@ -583,12 +583,12 @@ function Hero() {
 
       <motion.div
         style={{ z: heroZ, rotateX: heroRotX }}
-        className="relative mx-auto grid max-w-[1540px] grid-cols-1 gap-12 px-8 pb-24 perspective-hero preserve-3d md:grid-cols-12 md:gap-16 md:pb-40"
+        className="relative mx-auto grid max-w-[1540px] grid-cols-1 gap-12 px-8 pb-24 perspective-hero preserve-3d md:grid-cols-12 md:gap-10 md:pb-10"
       >
         {/* Unified Title Row/Col */}
-        <div className="col-span-1 md:col-span-6 md:col-start-1 md:row-start-1 order-1 md:order-none pb-2 md:pb-0 md:pt-2">
+        <div className="col-span-1 md:col-span-6 md:col-start-1 md:row-start-1 order-1 md:order-none pb-0 md:pb-0 md:pt-0">
           <Reveal delay={0.06}>
-            <div className="relative mt-2 md:mt-8">
+            <div className="relative mt-1 md:mt-1">
               {/* Single responsive h1 */}
               <h1 className="relative z-10 font-iconic md:font-display text-[clamp(2.8rem,12vw,5rem)] md:text-[clamp(3.5rem,8.6vw,7.8rem)] font-black leading-[1] md:leading-[0.88] tracking-wide md:tracking-tighter text-[color:var(--foreground)]">
                 {/* On mobile: "REACT". On desktop: "RE" + chrome italic "ACT" */}
